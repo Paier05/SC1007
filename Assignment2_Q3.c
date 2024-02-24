@@ -63,15 +63,60 @@ void infixtoPostfix(char *infix, char *postfix)
     s.ll.size = 0;
     s.ll.head = NULL;
 
-    char *temp, *new_temp;
+    char *temp;
     temp = infix;
 
     while(*temp != NULL){
         if(*temp != '+' || *temp != '-' || *temp != '*' || *temp != '/' || *temp != '(' || *temp != ')'){
             strncat(postfix, temp, 1);
-	    temp++;
+	        temp++;
         }else{
-
+            if(s.ll.size == 0){
+                push(&s, *temp);
+                temp++;
+            }else{
+                if(*temp == '+' || *temp == '-'){
+                    int checker = 1;
+                    while(checker){
+                        char holder = peek(&s);
+                        if(precedence(holder) > precedence(*temp)){
+                            strncat(postfix, &holder, 1);
+                            pop(&s);
+                        }else{
+                            push(&s, *temp);
+                            checker = 0;
+                            temp++;
+                        }
+                    }
+                }else if(*temp == '*' || *temp == '/'){
+                    int checker = 1;
+                    while(checker){
+                        char holder = peek(&s);
+                        if(precedence(holder) > precedence(*temp)){
+                            strncat(postfix, &holder, 1);
+                            pop(&s);
+                        }else{
+                            push(&s, *temp);
+                            checker = 0;
+                            temp++;
+                        }
+                    }
+                }else if(*temp == '('){
+                    push(&s, *temp);
+                    temp++;
+                }else if(*temp == ')'){
+                    while(1){
+                        char holder = pop(&s);
+                        if(holder == '('){
+                            break;
+                            temp++;
+                        }else{
+                            strncat(postfix, &holder, 1);
+                        }
+                    }
+                }
+            }
+            
         }
     }
 }
