@@ -66,70 +66,39 @@ void infixtoPostfix(char *infix, char *postfix)
     char *temp;
     temp = infix;
 
+    int counter = 0;
+
     while(*temp != NULL){
-        printf("%c\n", *temp);
-        if(*temp != '+' && *temp != '-' && *temp != '*' && *temp != '/' && *temp != '(' && *temp != ')'){
-            printf("checker1\n");
-            strncat(postfix, temp, 1);
-	        temp++;
+        if(*temp == '+' && *temp == '-' && *temp == '*' && *temp == '/' && *temp == '(' && *temp == ')'){
+            postfix[counter++] = *temp;
         }else{
-            printf("checker2\n9");
-            if(s.ll.size == 0){
+            if(*temp == '('){
                 push(&s, *temp);
                 temp++;
-            }else{
-                if(*temp == '+' || *temp == '-'){
-                    int checker = 1;
-                    while(checker){
-                        char holder = peek(&s);
-                        if(precedence(holder) > precedence(*temp)){
-                            strncat(postfix, &holder, 1);
-                            pop(&s);
-                        }else{
-                            push(&s, *temp);
-                            checker = 0;
-                            temp++;
-                        }
-                    }
-                }else if(*temp == '*' || *temp == '/'){
-                    int checker = 1;
-                    while(checker){
-                        char holder = peek(&s);
-                        if(precedence(holder) > precedence(*temp)){
-                            strncat(postfix, &holder, 1);
-                            pop(&s);
-                        }else{
-                            push(&s, *temp);
-                            checker = 0;
-                            temp++;
-                        }
-                    }
-                }else if(*temp == '('){
-                    push(&s, *temp);
-                    temp++;
-                }else if(*temp == ')'){
-                    while(1){
-                        char holder = pop(&s);
-                        if(holder == '('){
-                           temp++;
-                            break;
-                        }else{
-                            strncat(postfix, &holder, 1);
-                        }
-                    }
+            }else if(*temp == ')'){
+                while(!isEmptyStack(&s) &&  peek(&s) != '('){
+                    postfix[counter++] = *temp;
                 }
+
+                pop(&s);
+
+                temp++;
+            }else{
+                while(isEmptyStack(&s) && precedence(peek(&s)) >= precedence(*temp)){
+                    postfix[counter++] = pop(&s);
+                }
+
+                push(&s, *temp);
+                temp++;
             }
-
         }
+
+        while(!isEmptyStack(&s)){
+            postfix[counter++] = pop(&s);
+        }
+
+        postfix[counter] = '\0';
     }
-
-    int size = s.ll.size, i;
-
-    for(i = 0; i < size; i++){
-        char holder = pop(&s);
-        strncat(postfix, &holder, 1);
-    }
-
 }
 
 int precedence(char op)
