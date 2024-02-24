@@ -67,10 +67,13 @@ void infixtoPostfix(char *infix, char *postfix)
     temp = infix;
 
     while(*temp != NULL){
-        if(*temp != '+' || *temp != '-' || *temp != '*' || *temp != '/' || *temp != '(' || *temp != ')'){
+        printf("%c\n", *temp);
+        if(*temp != '+' && *temp != '-' && *temp != '*' && *temp != '/' && *temp != '(' && *temp != ')'){
+            printf("checker1\n");
             strncat(postfix, temp, 1);
 	        temp++;
         }else{
+            printf("checker2\n9");
             if(s.ll.size == 0){
                 push(&s, *temp);
                 temp++;
@@ -108,17 +111,25 @@ void infixtoPostfix(char *infix, char *postfix)
                     while(1){
                         char holder = pop(&s);
                         if(holder == '('){
+                           temp++;
                             break;
-                            temp++;
                         }else{
                             strncat(postfix, &holder, 1);
                         }
                     }
                 }
             }
-            
+
         }
     }
+
+    int size = s.ll.size, i;
+
+    for(i = 0; i < size; i++){
+        char holder = pop(&s);
+        strncat(postfix, &holder, 1);
+    }
+
 }
 
 int precedence(char op)
