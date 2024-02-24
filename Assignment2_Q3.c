@@ -69,6 +69,7 @@ void infixtoPostfix(char *infix, char *postfix)
     while(*temp != NULL){
         if(*temp != '+' || *temp != '-' || *temp != '*' || *temp != '/' || *temp != '(' || *temp != ')'){
             strncat(postfix, temp, 1);
+	    temp++;
         }else{
 
         }
