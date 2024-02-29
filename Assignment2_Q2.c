@@ -124,10 +124,12 @@ void infixtoPrefix(char* infix, char* prefix)
 
     temp = prefix;
 
-    while(*temp != '\0'){
+    while(!isEmptyStack(&s)){
         *temp = pop(&s);
         temp++;
     }
+
+    *temp = '\0';
 
 }
 
